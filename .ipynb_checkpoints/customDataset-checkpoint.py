@@ -24,12 +24,12 @@ class LBSTDataset(Dataset):
 #        image = io.imread(img_path)
         y_label = torch.tensor(int(self.annotations.iloc[index, 1])) # y_label is placed in the second column of the csv file
         
-        parcel_id = np.array((self.annotations.iloc[index, 2]))
+ #       parcel_id = np.array((self.annotations.iloc[index, 2]))
         #parcel_id = torch.tensor(int(self.annotations.iloc[index, 2]))
         
         if self.transform:
             image = self.transform(image) # optional: if we send in trasnforms, it will transform images
             
-        return (image, y_label, parcel_id)
+        return (image, y_label)
     
 # This class loads 1 image and the corresponding class to that image.
