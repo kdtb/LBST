@@ -30,8 +30,9 @@ class CustomDataModule(pl.LightningDataModule):
             transform=transforms.Compose(
                 [
                     transforms.Resize((224, 224)),
-                    # transforms.RandomHorizontalFlip(),
-                    # transforms.RandomResizedCrop(224),
+                    transforms.RandomHorizontalFlip(),
+                    transforms.RandomVerticalFlip(),
+                    transforms.RandomResizedCrop(224),
                     transforms.ToTensor()  # ,
                     # transforms.Normalize()
                 ]
