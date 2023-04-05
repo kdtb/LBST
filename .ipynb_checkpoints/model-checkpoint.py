@@ -4,7 +4,7 @@ from torch import nn, optim
 import torch.nn as nn
 import torch.nn.functional as F
 import torchvision
-import pytorchModel
+from pytorchModel import pytorchModel
 
 class NN(pl.LightningModule):  # pl.LightningModule inherits from nn.Module and adds extra functionality
     def __init__(self, model, input_size, learning_rate, num_classes):  # In the constructor, you declare all the layers you want to use.
