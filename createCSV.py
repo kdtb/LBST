@@ -14,7 +14,7 @@ import config
 
 
 class createCSV:
-    def __init__(self, base_dir, all_csv, train_csv, val_csv, test_csv, label_column, test_size):
+    def __init__(self, base_dir, all_csv, train_csv, val_csv, test_csv, label_column, test_size, seed):
         super().__init__()
         self.base_dir = base_dir
         self.all_csv = all_csv
@@ -23,17 +23,17 @@ class createCSV:
         self.test_csv = test_csv
         self.label_column = label_column
         self.test_size = test_size
+        self.seed = seed
         
-    def set_all_seeds(seed):
-        os.environ["PL_GLOBAL_SEED"] = str(seed)
-        random.seed(seed)
-        np.random.seed(seed)
-        torch.manual_seed(seed)
-        torch.cuda.manual_seed_all(seed)
+    def set_all_seeds(self):
+        os.environ["PL_GLOBAL_SEED"] = str(self.seed)
+        random.seed(self.seed)
+        np.random.seed(self.seed)
+        torch.manual_seed(self.seed)
+        torch.cuda.manual_seed_all(self.seed)
 
         
-    def __df__(self):
-        return
+    def df(self):
         base_path = self.all_csv
         target_dirs = os.listdir(base_path)
         print(target_dirs)
