@@ -6,7 +6,9 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 # Extra
 SEED = 1
 
-# Csv file
+# Model
+IN_CHANNELS = 3
+OUT_CHANNELS = 64
 
 
 # Training hyperparameters

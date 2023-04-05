@@ -4,29 +4,53 @@ from torch import nn, optim
 import torch.nn as nn
 import torch.nn.functional as F
 import torchvision
+import config
+import VGGBlock
 
-class NN(
-    pl.LightningModule
-):  # pl.LightningModule inherits from nn.Module and adds extra functionality
-    def __init__(
-        self, input_size, learning_rate, num_classes
-    ):  # In the constructor, you declare all the layers you want to use.
+class NN(pl.LightningModule):  # pl.LightningModule inherits from nn.Module and adds extra functionality
+    
+    
+    
+    def __init__(self, input_size, learning_rate, num_classes):
         super().__init__()
         self.lr = learning_rate
-        self.fc1 = nn.Linear(input_size, 50)
-        self.fc2 = nn.Linear(50, num_classes)
+        self.vgg_block = VGGBlock(3, 64) # input channels er 3 (RGB farve) og output channels er 64
+        self.fc1 = nn.Linear(64*14*14, num_classes) # antallet af input features til fully connected-laget er output fra VGG-blokken
+        
         self.loss_fn = nn.CrossEntropyLoss()
         self.accuracy = torchmetrics.Accuracy(
             task="multiclass", num_classes=num_classes
         )
         self.f1_score = torchmetrics.F1Score(task="multiclass", num_classes=num_classes)
-
-    def forward(
-        self, x
-    ):  # Forward function computes output Tensors from input Tensors. In the forward function, you define how your model is going to be run, from input to output. We're accepting only a single input in here, but if you want, feel free to use more
-        x = F.relu(self.fc1(x))
-        x = self.fc2(x)
+        
+    def forward(self, x):
+        x = self.vgg_block(x)
+        x = x.view(x.size(0), -1) # flattening
+        x = self.fc1(x)
         return x
+    
+    
+    
+    
+    
+    
+#    def __init__(self, input_size, learning_rate, num_classes):  # In the constructor, you declare all the layers you want to use.
+#        super().__init__()
+#        self.lr = learning_rate
+#        self.fc1 = nn.Linear(input_size, 50)
+#        self.fc2 = nn.Linear(50, num_classes)
+#        self.loss_fn = nn.CrossEntropyLoss()
+#        self.accuracy = torchmetrics.Accuracy(
+#            task="multiclass", num_classes=num_classes
+#        )
+#        self.f1_score = torchmetrics.F1Score(task="multiclass", num_classes=num_classes)
+#
+#    def forward(
+#        self, x
+#    ):  # Forward function computes output Tensors from input Tensors. In the forward function, you define how your model is going to be run, from input to output. We're accepting only a single input in here, but if you want, feel free to use more
+#        x = F.relu(self.fc1(x))
+#        x = self.fc2(x)
+#        return x
 
     def training_step(self, batch, batch_idx):
         x, y = batch
