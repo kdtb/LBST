@@ -12,6 +12,10 @@ class NN(pl.LightningModule):  # pl.LightningModule inherits from nn.Module and 
         self.lr = learning_rate
         # The inherited PyTorch module
         self.model = model
+        if hasattr(model, "dropout_proba"):
+            self.dropout_proba = model.dropout_proba
+        
+        
 #        self.fc1 = nn.Linear(input_size, 50)
 #        self.fc2 = nn.Linear(50, num_classes)
         self.loss_fn = nn.CrossEntropyLoss()
