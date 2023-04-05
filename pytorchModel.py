@@ -48,6 +48,7 @@ class pytorchModel(torch.nn.Module):
         self.output_layer = torch.nn.Linear(56*56*128, num_classes)
 
     def forward(self, x):
+        print(x.shape)
         x = self.features(x)
         x = torch.flatten(x, start_dim=1)
         x = self.output_layer(x)
