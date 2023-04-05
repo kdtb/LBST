@@ -13,10 +13,10 @@ import config
 
 
 
-class createCSV(csv):
-    def __init__(self, data_dir, all_csv, train_csv, val_csv, test_csv, label_column, test_size):
+class createCSV:
+    def __init__(self, base_dir, all_csv, train_csv, val_csv, test_csv, label_column, test_size):
         super().__init__()
-        self.data_dir = data_dir
+        self.base_dir = base_dir
         self.all_csv = all_csv
         self.train_csv = train_csv
         self.val_csv = val_csv
