@@ -2,7 +2,6 @@ import torchvision.transforms as transforms
 from torch.utils.data import DataLoader
 import pytorch_lightning as pl
 
-
 from customDataset import LBSTDataset
 
 
@@ -16,12 +15,6 @@ class CustomDataModule(pl.LightningDataModule):
         self.batch_size = batch_size
         self.num_workers = num_workers
 
-    #    def prepare_data(self): # downloading the data here so we have it to disc
-    #        LBSTDataset(train_csv_file, data_dir, transform=None)
-    #        LBSTDataset(val_csv_file, data_dir, transform=None)
-    #        LBSTDataset(test_csv_file, data_dir, transform=None)
-    # single gpu
-
     def setup(self, stage):
         # multiple gpu
         self.train_set = LBSTDataset(
@@ -33,8 +26,8 @@ class CustomDataModule(pl.LightningDataModule):
                     transforms.RandomHorizontalFlip(),
                     transforms.RandomVerticalFlip(),
                     #transforms.RandomResizedCrop(224),
-                    transforms.ToTensor()  # ,
-                    # transforms.Normalize()
+                    transforms.ToTensor(),  # ,
+                    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]) # Using the mean and std of Imagenet is a common practice.  
                 ]
             ),
         )
@@ -46,8 +39,8 @@ class CustomDataModule(pl.LightningDataModule):
                     transforms.Resize((224, 224)),
                     # transforms.RandomHorizontalFlip(),
                     # transforms.RandomResizedCrop(224),
-                    transforms.ToTensor()  # ,
-                    # transforms.Normalize()
+                    transforms.ToTensor(),  # ,
+                    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
                 ]
             ),
         )
@@ -59,8 +52,8 @@ class CustomDataModule(pl.LightningDataModule):
                     transforms.Resize((224, 224)),
                     # transforms.RandomHorizontalFlip(),
                     # transforms.RandomResizedCrop(224),
-                    transforms.ToTensor()  # ,
-                    # transforms.Normalize()
+                    transforms.ToTensor(),  # ,
+                    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
                 ]
             ),
         )
@@ -88,3 +81,11 @@ class CustomDataModule(pl.LightningDataModule):
             num_workers=self.num_workers,
             shuffle=False,
         )
+
+    
+    
+        #    def prepare_data(self): # downloading the data here so we have it to disc
+    #        LBSTDataset(train_csv_file, data_dir, transform=None)
+    #        LBSTDataset(val_csv_file, data_dir, transform=None)
+    #        LBSTDataset(test_csv_file, data_dir, transform=None)
+    # single gpu
