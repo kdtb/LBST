@@ -1,125 +1,116 @@
-# Data preprocessing: make .csv file containing file-path (xxx.jpeg), parcel-ID, and class
-
+import os
+import pandas as pd
+import numpy as np
 import torch
-import os, glob
-import random, csv
+import pytorch_lightning as pl
+from lightning.pytorch import seed_everything
+from pytorch_lightning.loggers import TensorBoardLogger
+import random
+
+import config
+
+# Create .csv file
 
 
-from torch.utils.data import Dataset, DataLoader
-import torchvision
-from torchvision import transforms
-from PIL import Image
+def set_all_seeds(seed):
+    os.environ["PL_GLOBAL_SEED"] = str(seed)
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
+
+class createCSV(csv):
+    def __init__(self, data_dir, all_csv, train_csv, val_csv, test_csv, label_column, test_size):
+        self.data_dir = data_dir
+        self.all_csv = all_csv
+        self.train_csv = train_csv
+        self.val_csv = val_csv
+        self.test_csv = test_csv
+        self.label_column = label_column
+        self.test_size = test_size
+        
+    def __df__(self):
+        base_path = self.all_csv
+        target_dirs = os.listdir(base_path)
+        print(target_dirs)
+
+        ## Create 2 separate df's: one for Approved images, one for NonApproved, containing file_name and label
+
+        ### Assign label = 0 to Approved images
+        approved = pd.DataFrame(
+            data=os.listdir(os.path.join(base_path, target_dirs[1])), columns=[self.label_column]
+        )
+        approved = approved.assign(label=0)
+
+        ### Assign label = 1 to NonApproved images
+        nonapproved = pd.DataFrame(
+            data=os.listdir(os.path.join(base_path, target_dirs[2])), columns=[self.label_column]
+        )
+        nonapproved = nonapproved.assign(label=1)
+
+        ## Merge into 1 df
+        df = pd.concat([approved, nonapproved])
+
+        ## Add parcel_id column containing character 3-10 from file_name column
+        df["parcel_id"] = df[self.label_column].str[3:10]
+
+        ## Write .csv
+        df.to_csv(
+            self.all_csv,
+            sep=",",
+            encoding="utf-8",
+            index=False,
+        )
 
 
-class Pokemon(Dataset):
+        ## Split group by
 
-    def __init__(self, root, resize, mode):
-        super(Pokemon, self).__init__()
+        set_all_seeds(config.SEED)
 
-        self.root = root
-        self.resize = resize
+        from sklearn.model_selection import GroupShuffleSplit
 
-        self.name2label = {}
-        for name in sorted(os.listdir(os.path.join(root))):
-            if not os.path.isdir(os.path.join(root, name)):
-                continue
+        splitter = GroupShuffleSplit(test_size=self.test_size, n_splits=2, random_state=config.SEED)
+        split = splitter.split(df, groups=df.parcel_id)
+        train_inds, test_inds = next(split)
 
-            self.name2label[name] = len(self.name2label.keys())
-
-        print(self.name2label)
-
-        # image, label
-        self.images, self.labels = self.load_csv('images.csv')
-
-        if mode == 'train':  # 60%
-            self.images = self.images[:int(0.6 * len(self.images))]
-            self.labels = self.labels[:int(0.6 * len(self.labels))]
-
-        elif mode == 'val':  # 20% (60-80%)
-            self.images = self.images[int(0.6 * len(self.images)):int(0.8 * len(self.images))]
-            self.labels = self.labels[int(0.6 * len(self.labels)):int(0.8 * len(self.labels))]
-
-        elif mode == 'test':  # 20% (80-100%)
-            self.images = self.images[int(0.8 * len(self.images)):]
-            self.labels = self.labels[int(0.8 * len(self.labels)):]
-
-    def load_csv(self, filename):
-
-        if not os.path.exists(os.path.join(self.root, filename)):
-            images = []
-            for name in self.name2label.keys():
-                # 'pokemon\\bulbasaur\\00000000.png'
-                images += glob.glob(os.path.join(self.root, name, '*.png'))
-                images += glob.glob(os.path.join(self.root, name, '*.jpg'))
-                images += glob.glob(os.path.join(self.root, name, '*.jpeg'))
-
-            # 1167, 'pokemon\\bulbasaur\\00000000.png'
-            print(len(images), images)
-
-            random.shuffle(images)
-            with open(os.path.join(self.root, filename), mode='w', newline='') as f:
-                writer = csv.writer(f)
-                for img in images:
-                    name = img.split(os.sep)[-2]
-                    label = self.name2label[name]
-                    # 'pokemon\\bulbasaur\\00000000.png', 0
-                    writer.writerow([img, label])
-                print(f"written into csv file: {filename}")
-
-        # read from csv file
-        images, labels = [], []
-        with open(os.path.join(self.root, filename)) as f:
-            reader = csv.reader(f)
-            for row in reader:
-                # 'pokemon\\bulbasaur\\00000000.png', 0
-                img, label = row
-                label = int(label)
-
-                images.append(img)
-                labels.append(label)
-
-        assert len(images) == len(labels)
-
-        return images, labels
-
-    def __len__(self):
-        return len(self.images)
-
-    def denormalize(self, x_hat):
-        mean = [0.485, 0.456, 0.406]
-        std = [0.229, 0.224, 0.225]
-
-        # x_hat = (x-mean)/std
-        # x = x_hat * std + mean
-        # x: [c, h, w]
-        # mean: [3] => [3, 1, 1] for broadcast to happen
-        mean = torch.tensor(mean).unsqueeze(1).unsqueeze(1)
-        std = torch.tensor(std).unsqueeze(1).unsqueeze(1)
-
-        x = x_hat * std + mean
-
-        return x
-
-    def __getitem__(self, idx):
-        # idx: [0:len(images)]
-        # self.images, self.labels
-        # img: 'pokemon\\bulbasaur\\00000000.png'
-        # label: 0
-        img, label = self.images[idx], self.labels[idx]
-
-        tf = transforms.Compose([
-            lambda x: Image.open(x).convert('RGB'),  # str path -> img data
-            transforms.Resize((int(self.resize * 1.25), int(self.resize * 1.25))),
-            transforms.RandomRotation(15),
-            transforms.CenterCrop(self.resize),
-            transforms.ToTensor(),
-            transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                                 std=[0.229, 0.224, 0.225])  # from imagenet
-        ])
-
-        img = tf(img)
-        label = torch.tensor(label)
-
-        return img, label
+        train_set = df.iloc[train_inds]
+        test_set = df.iloc[test_inds]
 
 
+        print(test_set.to_string())
+        print("Test set length:", len(test_set), "Train set length:", len(train_set), sep="\n")
+
+
+        ## Split train into 80/20 train/val
+
+        train_set2 = train_set
+        splitter2 = GroupShuffleSplit(test_size=self.test_size, n_splits=1, random_state=config.SEED)
+        split2 = splitter2.split(train_set2, groups=train_set2.parcel_id)
+        train_inds2, val_inds = next(split2)
+
+        train_set2 = train_set.iloc[train_inds2]
+        val_set = train_set.iloc[val_inds]
+
+
+        ## Save to csv
+
+        train_set2.to_csv(
+            self.train_csv,
+            sep=",",
+            encoding="utf-8",
+            index=False,
+        )
+        val_set.to_csv(
+            self.val_csv,
+            sep=",",
+            encoding="utf-8",
+            index=False,
+        )
+        test_set.to_csv(
+            self.test_csv,
+            sep=",",
+            encoding="utf-8",
+            index=False,
+        )
+        
+        return (train_set2, val_set, test_set)
