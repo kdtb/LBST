@@ -1,4 +1,3 @@
-import torchmetrics
 from torchmetrics import Metric
 
 

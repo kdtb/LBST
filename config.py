@@ -13,8 +13,8 @@ SEED = 1
 INPUT_SIZE = 3 * 224 * 224
 NUM_CLASSES = 2
 LEARNING_RATE = 0.001  # (=1e-3)
-BATCH_SIZE = 32
-NUM_EPOCHS = 5
+BATCH_SIZE = 8
+NUM_EPOCHS = 10
 
 # Dataset
 DATA_DIR = r"C:/Users/kaspe/OneDrive - Aarhus Universitet/Skrivebord/BI/4. semester/Data/LBST/Danish Challenge/2023 J#/All"
@@ -27,5 +27,5 @@ NUM_WORKERS = 4
 ACCELERATOR = "auto"  # or "auto"
 DEVICES = "auto"
 MIN_EPOCHS = 1
-MAX_EPOCHS = 5
+MAX_EPOCHS = 10
 DETERMINISTIC = True

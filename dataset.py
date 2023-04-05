@@ -1,8 +1,4 @@
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
 import torchvision.transforms as transforms
-from torch import nn, optim
 from torch.utils.data import DataLoader
 import pytorch_lightning as pl
 

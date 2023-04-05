@@ -1,7 +1,5 @@
-from tqdm import tqdm
 import pytorch_lightning as pl
 import torchmetrics
-from torchmetrics import Metric
 from torch import nn, optim
 import torch.nn as nn
 import torch.nn.functional as F
