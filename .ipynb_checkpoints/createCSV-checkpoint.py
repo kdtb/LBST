@@ -12,15 +12,10 @@ import config
 # Create .csv file
 
 
-def set_all_seeds(seed):
-    os.environ["PL_GLOBAL_SEED"] = str(seed)
-    random.seed(seed)
-    np.random.seed(seed)
-    torch.manual_seed(seed)
-    torch.cuda.manual_seed_all(seed)
 
 class createCSV(csv):
     def __init__(self, data_dir, all_csv, train_csv, val_csv, test_csv, label_column, test_size):
+        super().__init__()
         self.data_dir = data_dir
         self.all_csv = all_csv
         self.train_csv = train_csv
@@ -29,7 +24,16 @@ class createCSV(csv):
         self.label_column = label_column
         self.test_size = test_size
         
+    def set_all_seeds(seed):
+        os.environ["PL_GLOBAL_SEED"] = str(seed)
+        random.seed(seed)
+        np.random.seed(seed)
+        torch.manual_seed(seed)
+        torch.cuda.manual_seed_all(seed)
+
+        
     def __df__(self):
+        return
         base_path = self.all_csv
         target_dirs = os.listdir(base_path)
         print(target_dirs)
@@ -113,4 +117,3 @@ class createCSV(csv):
             index=False,
         )
         
-        return (train_set2, val_set, test_set)
