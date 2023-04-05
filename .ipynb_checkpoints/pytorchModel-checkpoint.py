@@ -3,7 +3,7 @@ import torch.nn.functional as F
 import config
 
 # Regular PyTorch Module
-class PyTorchModel(torch.nn.Module):
+class pytorchModel(torch.nn.Module):
     def __init__(self, num_classes):
         super().__init__()
 
@@ -16,8 +16,8 @@ class PyTorchModel(torch.nn.Module):
         self.features = torch.nn.Sequential(
             # 224x224x3 => 224x224x64
             torch.nn.Conv2d(
-                in_channels=config.IN_CHANNELS,
-                out_channels=config.OUT_CHANNELS,
+                in_channels=3,
+                out_channels=64,
                 kernel_size=(3, 3),
                 stride=(1, 1),
                 padding=1),  # (1(28-1) - 28 + 3) / 2 = 1
@@ -31,7 +31,7 @@ class PyTorchModel(torch.nn.Module):
             
             # 112x112x64 => 112x112x128
             torch.nn.Conv2d(
-                in_channels=config.OUT_CHANNELS,
+                in_channels=64,
                 out_channels=128,
                 kernel_size=(3, 3),
                 stride=(1, 1),
