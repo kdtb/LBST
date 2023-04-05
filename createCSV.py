@@ -34,7 +34,7 @@ class createCSV:
 
         
     def df(self):
-        base_path = self.all_csv
+        base_path = self.base_dir
         target_dirs = os.listdir(base_path)
         print(target_dirs)
 
@@ -42,13 +42,15 @@ class createCSV:
 
         ### Assign label = 0 to Approved images
         approved = pd.DataFrame(
-            data=os.listdir(os.path.join(base_path, target_dirs[1])), columns=[self.label_column]
+            data=os.listdir(os.path.join(base_path, target_dirs[1])), # 1 represents the second folder in the path: C:\Users\kaspe\OneDrive - Aarhus Universitet\Skrivebord\BI\4. semester\Data\LBST\Danish Challenge\2023 J#
+            columns=[self.label_column]
         )
         approved = approved.assign(label=0)
 
         ### Assign label = 1 to NonApproved images
         nonapproved = pd.DataFrame(
-            data=os.listdir(os.path.join(base_path, target_dirs[2])), columns=[self.label_column]
+            data=os.listdir(os.path.join(base_path, target_dirs[2])),
+            columns=[self.label_column]
         )
         nonapproved = nonapproved.assign(label=1)
 
@@ -69,7 +71,7 @@ class createCSV:
 
         ## Split group by
 
-        set_all_seeds(config.SEED)
+        createCSV.set_all_seeds(self)
 
         from sklearn.model_selection import GroupShuffleSplit
 
