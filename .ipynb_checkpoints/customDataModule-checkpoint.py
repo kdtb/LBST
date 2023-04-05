@@ -27,7 +27,7 @@ class CustomDataModule(pl.LightningDataModule):
                     #transforms.RandomVerticalFlip(),
                     #transforms.RandomResizedCrop(224),
                     transforms.ToTensor(),  # ,
-                    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]) # Using the mean and std of Imagenet is a common practice.  
+                    #transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]) # Using the mean and std of Imagenet is a common practice.  
                 ]
             ),
         )
