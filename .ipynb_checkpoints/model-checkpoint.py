@@ -19,9 +19,10 @@ class NN(pl.LightningModule):
 
         self.loss_fn = nn.CrossEntropyLoss()
         self.accuracy = torchmetrics.Accuracy(
-            task="multiclass", num_classes=num_classes
+            task="binary", num_classes=num_classes
         )
-        self.f1_score = torchmetrics.F1Score(task="multiclass", num_classes=num_classes)
+        self.f1_score = torchmetrics.classification.BinaryF1Score()
+        self.precision = torchmetrics.Precision(task="binary")
 
     def forward(self, x):  # Forward function computes output Tensors from input Tensors.
         return self.model(x)
@@ -53,6 +54,7 @@ class NN(pl.LightningModule):
                 "train_loss": loss,
                 "train_accuracy": accuracy,
                 "train_f1_score": f1_score,
+                "train_precision": precision
             },
             on_step=False,
             on_epoch=True,
