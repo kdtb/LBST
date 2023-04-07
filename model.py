@@ -14,8 +14,8 @@ class NN(pl.LightningModule):
         
         # The inherited PyTorch module
         self.model = model
-        if hasattr(model, "dropout_proba"):
-            self.dropout_proba = model.dropout_proba
+#        if hasattr(model, "dropout_proba"):
+#            self.dropout_proba = model.dropout_proba
 
         self.loss_fn = nn.CrossEntropyLoss()
         self.accuracy = torchmetrics.Accuracy(
@@ -25,8 +25,9 @@ class NN(pl.LightningModule):
 
     def forward(self, x):  # Forward function computes output Tensors from input Tensors.
         return self.model(x)
-    
-    #    def _common_step(self, batch, batch_idx):
+
+# Old common step which resized.
+#    def _common_step(self, batch, batch_idx):
 #        x, y = batch
 #        x = x.reshape(x.size(0), -1)
 #        scores = self.forward(x)
