@@ -69,7 +69,7 @@ class createCSV:
         )
 
 
-        ## Split group by
+        ## Split group by (make
 
         createCSV.set_all_seeds(self)
 
@@ -97,6 +97,7 @@ class createCSV:
         train_set2 = train_set.iloc[train_inds2]
         val_set = train_set.iloc[val_inds]
 
+        print("Val set length:", len(val_set), sep="\n")
 
         ## Save to csv
 

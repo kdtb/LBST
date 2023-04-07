@@ -23,11 +23,7 @@ class CustomDataModule(pl.LightningDataModule):
             transform=transforms.Compose(
                 [
                     transforms.Resize((224, 224)),
-                   # transforms.RandomHorizontalFlip(),
-                    #transforms.RandomVerticalFlip(),
-                    #transforms.RandomResizedCrop(224),
-                    transforms.ToTensor(),  # ,
-                    #transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]) # Using the mean and std of Imagenet is a common practice.  
+                    transforms.ToTensor(),
                 ]
             ),
         )
@@ -37,10 +33,7 @@ class CustomDataModule(pl.LightningDataModule):
             transform=transforms.Compose(
                 [
                     transforms.Resize((224, 224)),
-                    # transforms.RandomHorizontalFlip(),
-                    # transforms.RandomResizedCrop(224),
-                    transforms.ToTensor(),  # ,
-                    #transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+                    transforms.ToTensor(),
                 ]
             ),
         )
@@ -50,10 +43,7 @@ class CustomDataModule(pl.LightningDataModule):
             transform=transforms.Compose(
                 [
                     transforms.Resize((224, 224)),
-                    # transforms.RandomHorizontalFlip(),
-                    # transforms.RandomResizedCrop(224),
-                    transforms.ToTensor(),  # ,
-                    #transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+                    transforms.ToTensor(),
                 ]
             ),
         )
@@ -81,11 +71,3 @@ class CustomDataModule(pl.LightningDataModule):
             num_workers=self.num_workers,
             shuffle=False,
         )
-
-    
-    
-        #    def prepare_data(self): # downloading the data here so we have it to disc
-    #        LBSTDataset(train_csv_file, data_dir, transform=None)
-    #        LBSTDataset(val_csv_file, data_dir, transform=None)
-    #        LBSTDataset(test_csv_file, data_dir, transform=None)
-    # single gpu
