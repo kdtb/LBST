@@ -17,25 +17,17 @@ class NN(pl.LightningModule):
 #        if hasattr(model, "dropout_proba"):
 #            self.dropout_proba = model.dropout_proba
 
-
         self.loss_fn = nn.CrossEntropyLoss()
         self.f1_score = torchmetrics.F1Score(task="multiclass", num_classes=num_classes)
+#        self.b_f1_score = torchmetrics.classification.BinaryF1Score()
         self.accuracy = torchmetrics.Accuracy(task="multiclass", num_classes=num_classes)
         self.precision = torchmetrics.Precision(task="multiclass", num_classes=num_classes)
         self.recall = torchmetrics.Recall(task="multiclass", num_classes=num_classes)
 
-
-#        self.loss_fn = nn.BCELoss()
-#        self.f1_score = torchmetrics.classification.BinaryF1Score()
-#        self.accuracy = torchmetrics.classification.BinaryAccuracy()
-#        self.precision = torchmetrics.classification.BinaryPrecision()
-#        self.recall = torchmetrics.classification.BinaryRecall()
-#        self.confusion_matrix = torchmetrics.classification.BinaryConfusionMatrix()
-
     def forward(self, x):  # Forward function computes output Tensors from input Tensors.
         return self.model(x)
 
-# Old common step which resized.
+# Old common step which reshaped.
 #    def _common_step(self, batch, batch_idx):
 #        x, y = batch
 #        x = x.reshape(x.size(0), -1)
