@@ -39,7 +39,7 @@ class NN(pl.LightningModule):
         loss = self.loss_fn(scores, y)
         preds = torch.argmax(scores, dim=1)
 
-        return loss, scores, y, preds
+        return loss, scores, y#, preds
     
 
     def training_step(self, batch, batch_idx):
