@@ -17,12 +17,20 @@ class NN(pl.LightningModule):
 #        if hasattr(model, "dropout_proba"):
 #            self.dropout_proba = model.dropout_proba
 
+
         self.loss_fn = nn.CrossEntropyLoss()
-        self.accuracy = torchmetrics.Accuracy(
-            task="binary", num_classes=num_classes
-        )
-        self.f1_score = torchmetrics.classification.BinaryF1Score()
-        self.precision = torchmetrics.Precision(task="binary")
+        self.f1_score = torchmetrics.F1Score(task="multiclass", num_classes=num_classes)
+        self.accuracy = torchmetrics.Accuracy(task="multiclass", num_classes=num_classes)
+        self.precision = torchmetrics.Precision(task="multiclass", num_classes=num_classes)
+        self.recall = torchmetrics.Recall(task="multiclass", num_classes=num_classes)
+
+
+#        self.loss_fn = nn.BCELoss()
+#        self.f1_score = torchmetrics.classification.BinaryF1Score()
+#        self.accuracy = torchmetrics.classification.BinaryAccuracy()
+#        self.precision = torchmetrics.classification.BinaryPrecision()
+#        self.recall = torchmetrics.classification.BinaryRecall()
+#        self.confusion_matrix = torchmetrics.classification.BinaryConfusionMatrix()
 
     def forward(self, x):  # Forward function computes output Tensors from input Tensors.
         return self.model(x)
@@ -39,7 +47,7 @@ class NN(pl.LightningModule):
         x, y = batch
         scores = self(x)
         loss = self.loss_fn(scores, y)
-        preds = torch.argmax(scores, dim=1)
+        #preds = torch.argmax(scores, dim=1)
 
         return loss, scores, y#, preds
     
@@ -47,14 +55,17 @@ class NN(pl.LightningModule):
     def training_step(self, batch, batch_idx):
         x, y = batch
         loss, scores, y = self._common_step(batch, batch_idx)
-        accuracy = self.accuracy(scores, y)
         f1_score = self.f1_score(scores, y)
+        accuracy = self.accuracy(scores, y)
+        precision = self.precision(scores, y)
+        recall = self.recall(scores, y)
         self.log_dict(
             {
                 "train_loss": loss,
-                "train_accuracy": accuracy,
                 "train_f1_score": f1_score,
-                "train_precision": precision
+                "train_accuracy": accuracy,
+                "train_precision": precision,
+                "train_recall": recall
             },
             on_step=False,
             on_epoch=True,
