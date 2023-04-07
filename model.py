@@ -24,6 +24,22 @@ class NN(pl.LightningModule):
 
     def forward(self, x):  # Forward function computes output Tensors from input Tensors.
         return self.model(x)
+    
+    #    def _common_step(self, batch, batch_idx):
+#        x, y = batch
+#        x = x.reshape(x.size(0), -1)
+#        scores = self.forward(x)
+#        loss = self.loss_fn(scores, y)
+#        return loss, scores, y
+    
+    def _common_step(self, batch, batch_idx):
+        x, y = batch
+        scores = self(x)
+        loss = self.loss_fn(scores, y)
+        preds = torch.argmax(scores, dim=1)
+
+        return loss, scores, y, preds
+    
 
     def training_step(self, batch, batch_idx):
         x, y = batch
@@ -57,21 +73,6 @@ class NN(pl.LightningModule):
         loss, scores, y = self._common_step(batch, batch_idx)
         self.log("test_loss", loss)
         return loss
-
-#    def _common_step(self, batch, batch_idx):
-#        x, y = batch
-#        x = x.reshape(x.size(0), -1)
-#        scores = self.forward(x)
-#        loss = self.loss_fn(scores, y)
-#        return loss, scores, y
-    
-    def _shared_step(self, batch):
-        x, y = batch
-        scores = self(x)
-        loss = self.loss_fn(scores, y)
-        preds = torch.argmax(scores, dim=1)
-
-        return loss, y, preds
 
     def predict_step(self, batch, batch_idx):
         x, y = batch
