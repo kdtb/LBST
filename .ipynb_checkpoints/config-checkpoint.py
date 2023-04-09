@@ -6,7 +6,9 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 # Extra
 SEED = 1
 
-# Csv file
+# Model
+IN_CHANNELS = 3
+OUT_CHANNELS = 64
 
 
 # Training hyperparameters
@@ -22,7 +24,7 @@ DATA_DIR = r"C:/Users/kaspe/OneDrive - Aarhus Universitet/Skrivebord/BI/4. semes
 ALL_CSV = r"C:/Users/kaspe/OneDrive - Aarhus Universitet/Skrivebord/BI/4. semester/Data/LBST/Danish Challenge/2023 J#/xlbst.csv"
 TRAIN_CSV = r"C:/Users/kaspe/OneDrive - Aarhus Universitet/Skrivebord/BI/4. semester/Data/LBST/Danish Challenge/2023 J#/train_set.csv"
 VAL_CSV = r"C:/Users/kaspe/OneDrive - Aarhus Universitet/Skrivebord/BI/4. semester/Data/LBST/Danish Challenge/2023 J#/val_set.csv"
-TEST_CSV = r"C:/Users/kaspe/OneDrive - Aarhus Universitet/Skrivebord/BI/4. semester/Data/LBST/Danish Challenge/2023 J#/val_set.csv"
+TEST_CSV = r"C:/Users/kaspe/OneDrive - Aarhus Universitet/Skrivebord/BI/4. semester/Data/LBST/Danish Challenge/2023 J#/test_set.csv"
 LABEL_COLUMN = "file_name"
 TEST_SIZE = 0.2
 NUM_WORKERS = 4
@@ -31,5 +33,5 @@ NUM_WORKERS = 4
 ACCELERATOR = "auto"  # or "auto"
 DEVICES = "auto"
 MIN_EPOCHS = 1
-MAX_EPOCHS = 10
+MAX_EPOCHS = 5
 DETERMINISTIC = True
