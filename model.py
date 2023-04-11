@@ -21,6 +21,7 @@ class NN(pl.LightningModule):
         self.f1_score = torchmetrics.F1Score(task="multiclass", num_classes=num_classes)
 #        self.b_f1_score = torchmetrics.classification.BinaryF1Score()
         self.accuracy = torchmetrics.Accuracy(task="multiclass", num_classes=num_classes)
+        self.binaryaccuracy = torchmetrics.classification.BinaryAccuracy()
         self.precision = torchmetrics.Precision(task="multiclass", num_classes=num_classes)
         self.recall = torchmetrics.Recall(task="multiclass", num_classes=num_classes)
 
@@ -39,16 +40,17 @@ class NN(pl.LightningModule):
         x, y = batch
         scores = self(x)
         loss = self.loss_fn(scores, y)
-        #preds = torch.argmax(scores, dim=1)
+        preds = torch.argmax(scores, dim=1)
 
-        return loss, scores, y#, preds
+        return loss, scores, y, preds
     
 
     def training_step(self, batch, batch_idx):
         x, y = batch
-        loss, scores, y = self._common_step(batch, batch_idx)
+        loss, scores, y, preds = self._common_step(batch, batch_idx)
         f1_score = self.f1_score(scores, y)
         accuracy = self.accuracy(scores, y)
+        binaryaccuracy = self.binaryaccuracy(preds, y)
         precision = self.precision(scores, y)
         recall = self.recall(scores, y)
         self.log_dict(
@@ -56,6 +58,7 @@ class NN(pl.LightningModule):
                 "train_loss": loss,
                 "train_f1_score": f1_score,
                 "train_accuracy": accuracy,
+                "train_binaryaccuracy": binaryaccuracy,
                 "train_precision": precision,
                 "train_recall": recall
             },
@@ -69,7 +72,7 @@ class NN(pl.LightningModule):
             grid = torchvision.utils.make_grid(x.view(-1, 3, 224, 224))
             self.logger.experiment.add_image("lbst_images", grid, self.global_step)
         
-        return {"loss": loss, "scores": scores, "y": y}
+        return {"loss": loss, "scores": scores, "y": y, "preds": preds}
 
     def validation_step(self, batch, batch_idx):
         loss, scores, y = self._common_step(batch, batch_idx)
