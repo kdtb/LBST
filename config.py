@@ -30,7 +30,7 @@ TEST_SIZE = 0.2
 NUM_WORKERS = 4
 
 # Compute related
-ACCELERATOR = "auto"  # or "auto"
+ACCELERATOR = "gpu"  # or "auto"
 DEVICES = "auto"
 MIN_EPOCHS = 1
 MAX_EPOCHS = 5

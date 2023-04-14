@@ -1,4 +1,3 @@
-import os
 import pandas as pd
 import numpy as np
 import torch
@@ -6,7 +5,7 @@ import pytorch_lightning as pl
 from lightning.pytorch import seed_everything
 from pytorch_lightning.loggers import TensorBoardLogger
 import random
-
+import os
 import config
 
 # Create .csv file
