@@ -18,8 +18,8 @@ class NN(pl.LightningModule):
             self.dropout_proba = model.dropout_proba
 
         # Metrics
-        self.loss_fn = nn.CrossEntropyLoss()
-#        self.loss_fn = nn.BCELoss()
+#        self.loss_fn = nn.CrossEntropyLoss()
+        self.loss_fn = nn.BCELoss()
         self.f1_score = torchmetrics.classification.BinaryF1Score()
         self.accuracy = torchmetrics.classification.BinaryAccuracy()
         self.precision = torchmetrics.classification.BinaryPrecision()
