@@ -18,15 +18,10 @@ class NN(pl.LightningModule):
             self.dropout_proba = model.dropout_proba
 
         # Metrics
-#        self.loss_fn = nn.CrossEntropyLoss()
-        self.loss_fn = nn.BCELoss()
-        self.f1_score = torchmetrics.classification.BinaryF1Score()
-        self.accuracy = torchmetrics.classification.BinaryAccuracy()
-        self.precision = torchmetrics.classification.BinaryPrecision()
-        self.recall = torchmetrics.classification.BinaryRecall()
-#        self.confmat = torchmetrics.classification.BinaryConfusionMatrix()
+        self.loss_fn = nn.CrossEntropyLoss()
+        self.train_acc = torchmetrics.Accuracy(task="multiclass", num_classes=num_classes)
+        self.val_acc = torchmetrics.Accuracy(task="multiclass", num_classes=num_classes)
 
-        
 
     def forward(self, x):  # Forward function computes output Tensors from input Tensors.
         return self.model(x)
@@ -44,18 +39,12 @@ class NN(pl.LightningModule):
         x, y = batch
         loss, y, preds = self._common_step(batch, batch_idx)
         
-        # Metrics
-        f1_score = self.f1_score(preds, y)
-        accuracy = self.accuracy(preds, y)
-        precision = self.precision(preds, y)
-        recall = self.recall(preds, y)
+        self.train_acc(preds, y)
+        
         self.log_dict(
             {
                 "train_loss": loss,
-                "train_f1_score": f1_score,
-                "train_accuracy": accuracy,
-                "train_precision": precision,
-                "train_recall": recall
+                "train_accuracy": self.train_acc
             },
             on_step=False,
             on_epoch=True,
@@ -64,20 +53,25 @@ class NN(pl.LightningModule):
         
         return {"loss": loss, "y": y, "preds": preds}
 
+
     def validation_step(self, batch, batch_idx):
+        x, y = batch
         loss, y, preds = self._common_step(batch, batch_idx)
         
-        # Metrics
-        f1_score = self.f1_score(preds, y)
+        val_acc = self.val_acc(preds, y)
+        
         self.log_dict(
-            {"val_loss": loss,
-             "val_f1_score": f1_score
+            {
+                "val_loss": loss,
+                "val_accuracy": val_acc
             },
             on_step=False,
             on_epoch=True,
-            prog_bar=True
+            prog_bar=True,
         )
+        
         return loss
+
 
     def test_step(self, batch, batch_idx):
         loss, y, preds = self._common_step(batch, batch_idx)
@@ -98,21 +92,3 @@ class NN(pl.LightningModule):
 
     def configure_optimizers(self):
         return optim.Adam(self.parameters(), lr=self.lr)
-
-
-# TO GET A BAG OF IMAGES SHOWN IN TENSORBOARD - EG. TO SEE HOW IMAGES ARE AUGMENTED    
-#        if batch_idx % 100 == 0:
-#            x = x[:8]
-#            grid = torchvision.utils.make_grid(x.view(-1, 3, 224, 224))
-#            self.logger.experiment.add_image("lbst_images", grid, self.global_step)    
-    
-    
-# Old common step which reshaped.
-#    def _common_step(self, batch, batch_idx):
-#        x, y = batch
-#        x = x.reshape(x.size(0), -1)
-#        scores = self.forward(x)
-#        loss = self.loss_fn(scores, y)
-#        return loss, scores, y
-
-# Original train loop ending:        return {"loss": loss, "y": y, "preds": preds, "scores": scores}
