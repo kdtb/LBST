@@ -67,7 +67,7 @@ class NN(pl.LightningModule):
             },
             on_step=False,
             on_epoch=True,
-            prog_bar=True,
+            prog_bar=False,
         )
         
         return loss
