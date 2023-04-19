@@ -25,28 +25,21 @@ class NN(pl.LightningModule):
         for param in self.model.parameters():
             param.requires_grad = False
         
-        # num_filters = model.fc.in_features # returns the size of the output tensor going into the Linear layer from the conv block.
-        n_sizes = self._get_conv_output(input_shape)
+        n_sizes = model.classifier[6].out_features # returns the size of the output tensor going into the Linear layer from the conv block.
+
         self.classifier = nn.Linear(n_sizes, num_classes)
         
         # Metrics
         self.loss_fn = nn.CrossEntropyLoss()
         self.train_acc = torchmetrics.Accuracy(task="multiclass", num_classes=num_classes)
         self.val_acc = torchmetrics.Accuracy(task="multiclass", num_classes=num_classes)
-    
-    def _get_conv_output(self, shape):
-        batch_size = 1
-        tmp_input = torch.autograd.Variable(torch.rand(batch_size, *shape))
-
-
-        output_feat = self._forward_features(tmp_input) 
-        n_size = output_feat.data.view(batch_size, -1).size(1)
-        return n_size
 
     
-    # returns the feature tensor from the conv block
-    def _forward_features(self, x):
+    def forward(self, x):
         x = self.model(x)
+        x = x.view(x.size(0), -1)
+        x = self.classifier(x)
+       
         return x
 
     
@@ -112,3 +105,6 @@ class NN(pl.LightningModule):
         scores = self.forward(x)
         preds = torch.argmax(scores, dim=1)
         return preds
+
+    def configure_optimizers(self):
+        return optim.Adam(self.parameters(), lr=self.lr)
