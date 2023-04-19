@@ -33,6 +33,7 @@ class NN(pl.LightningModule):
         self.loss_fn = nn.CrossEntropyLoss()
         self.train_acc = torchmetrics.Accuracy(task="multiclass", num_classes=num_classes)
         self.val_acc = torchmetrics.Accuracy(task="multiclass", num_classes=num_classes)
+        self.train_recall = torchmetrics.Recall(task="multiclass", num_classes=num_classes)
 
     
     def forward(self, x):
@@ -55,12 +56,14 @@ class NN(pl.LightningModule):
         x, y = batch
         loss, y, preds = self._common_step(batch, batch_idx)
         
-        self.train_acc(preds, y)
+        train_acc = self.train_acc(preds, y)
+        train_recall = self.train_recall(preds, y)
         
         self.log_dict(
             {
                 "train_loss": loss,
-                "train_accuracy": self.train_acc
+                "train_accuracy": self.train_acc,
+                "train_recall": self.train_recall,
             },
             on_step=False,
             on_epoch=True,
@@ -79,7 +82,7 @@ class NN(pl.LightningModule):
         self.log_dict(
             {
                 "val_loss": loss,
-                "val_accuracy": val_acc
+                "val_accuracy": val_acc,
             },
             on_step=False,
             on_epoch=True,
