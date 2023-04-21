@@ -4,7 +4,6 @@ from torch import nn, optim
 import torch.nn as nn
 import torch.nn.functional as F
 import torchvision
-from pytorchModel import pytorchModel
 import torch
 
 class NN(pl.LightningModule):
@@ -22,6 +21,11 @@ class NN(pl.LightningModule):
         self.train_acc = torchmetrics.Accuracy(task="multiclass", num_classes=num_classes)
         self.val_acc = torchmetrics.Accuracy(task="multiclass", num_classes=num_classes)
         self.train_recall = torchmetrics.Recall(task="multiclass", num_classes=num_classes)
+        self.val_recall = torchmetrics.Recall(task="multiclass", num_classes=num_classes)
+        self.train_precision = torchmetrics.Precision(task="multiclass", num_classes=num_classes)
+        self.val_precision = torchmetrics.Precision(task="multiclass", num_classes=num_classes)
+        self.train_f1score = torchmetrics.F1Score(task="multiclass", num_classes=num_classes)
+        self.val_f1score = torchmetrics.F1Score(task="multiclass", num_classes=num_classes)
 
 
     def forward(self, x):  # Forward function computes output Tensors from input Tensors.
@@ -40,14 +44,18 @@ class NN(pl.LightningModule):
         x, y = batch
         loss, y, preds = self._common_step(batch, batch_idx)
         
-        self.train_acc(preds, y)
-        self.train_recall(preds, y)
+        train_acc = self.train_acc(preds, y)
+        train_recall = self.train_recall(preds, y)
+        train_precision = self.train_precision(preds, y)
+        train_f1score = self.train_f1score(preds, y)
         
         self.log_dict(
             {
                 "train_loss": loss,
-                "train_accuracy": self.train_acc
-                "train_recall": self.train_recall
+                "train_accuracy": train_acc,
+                "train_recall": train_recall,
+                "train_precision": train_precision,
+                "train_f1score": train_f1score
             },
             on_step=False,
             on_epoch=True,
@@ -62,11 +70,17 @@ class NN(pl.LightningModule):
         loss, y, preds = self._common_step(batch, batch_idx)
         
         val_acc = self.val_acc(preds, y)
+        val_recall = self.val_recall(preds, y)
+        val_precision = self.val_precision(preds, y)
+        val_f1score = self.val_f1score(preds, y)
         
         self.log_dict(
             {
                 "val_loss": loss,
-                "val_accuracy": val_acc
+                "val_accuracy": val_acc,
+                "val_recall": val_recall,
+                "val_precision": val_precision,
+                "val_f1score": val_f1score
             },
             on_step=False,
             on_epoch=True,

@@ -1,11 +1,11 @@
 import pytorch_lightning as pl
-import torchmetrics
 from torch import nn, optim
 import torch.nn as nn
 import torch.nn.functional as F
 import torchvision
 from pytorchModel import pytorchModel
 import torch
+import torchmetrics
 
 
 
@@ -25,8 +25,8 @@ class NN(pl.LightningModule):
         for param in self.model.parameters():
             param.requires_grad = False
         
+    
         n_sizes = model.classifier[6].out_features # returns the size of the output tensor going into the Linear layer from the conv block.
-
         self.classifier = nn.Linear(n_sizes, num_classes)
         
         # Metrics
@@ -34,6 +34,8 @@ class NN(pl.LightningModule):
         self.train_acc = torchmetrics.Accuracy(task="multiclass", num_classes=num_classes)
         self.val_acc = torchmetrics.Accuracy(task="multiclass", num_classes=num_classes)
         self.train_recall = torchmetrics.Recall(task="multiclass", num_classes=num_classes)
+        self.train_precision = torchmetrics.Precision(task="multiclass", num_classes=num_classes)
+        self.train_f1score = torchmetrics.F1Score(task="multiclass", num_classes=num_classes)
 
     
     def forward(self, x):
@@ -56,21 +58,27 @@ class NN(pl.LightningModule):
         x, y = batch
         loss, y, preds = self._common_step(batch, batch_idx)
         
+
         train_acc = self.train_acc(preds, y)
         train_recall = self.train_recall(preds, y)
+        train_precision = self.train_precision(preds, y)
+        train_f1score = self.train_f1score(preds, y)
         
         self.log_dict(
             {
                 "train_loss": loss,
                 "train_accuracy": self.train_acc,
                 "train_recall": self.train_recall,
+                "train_precision": self.train_precision,
+                "train_f1score": self.train_f1score
             },
             on_step=False,
             on_epoch=True,
-            prog_bar=True,
+            prog_bar=True
         )
         
         return {"loss": loss, "y": y, "preds": preds}
+    
 
 
     def validation_step(self, batch, batch_idx):
@@ -94,6 +102,7 @@ class NN(pl.LightningModule):
 
     def test_step(self, batch, batch_idx):
         loss, y, preds = self._common_step(batch, batch_idx)
+        
         self.log_dict(
             {"test_loss": loss
             },
