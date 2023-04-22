@@ -17,15 +17,16 @@ class NN(pl.LightningModule):
             self.dropout_proba = model.dropout_proba
 
         # Metrics
-        self.loss_fn = nn.CrossEntropyLoss()
-        self.train_acc = torchmetrics.Accuracy(task="multiclass", num_classes=num_classes)
-        self.val_acc = torchmetrics.Accuracy(task="multiclass", num_classes=num_classes)
-        self.train_recall = torchmetrics.Recall(task="multiclass", num_classes=num_classes)
-        self.val_recall = torchmetrics.Recall(task="multiclass", num_classes=num_classes)
-        self.train_precision = torchmetrics.Precision(task="multiclass", num_classes=num_classes)
-        self.val_precision = torchmetrics.Precision(task="multiclass", num_classes=num_classes)
-        self.train_f1score = torchmetrics.F1Score(task="multiclass", num_classes=num_classes)
-        self.val_f1score = torchmetrics.F1Score(task="multiclass", num_classes=num_classes)
+        #self.loss_fn = nn.CrossEntropyLoss()
+        self.loss_fn = nn.BCELoss()
+        self.train_acc = torchmetrics.Accuracy(task='binary', num_classes=num_classes)
+        self.val_acc = torchmetrics.Accuracy(task='binary', num_classes=num_classes)
+        self.train_recall = torchmetrics.Recall(task='binary', num_classes=num_classes)
+        self.val_recall = torchmetrics.Recall(task='binary', num_classes=num_classes)
+        self.train_precision = torchmetrics.Precision(task='binary', num_classes=num_classes)
+        self.val_precision = torchmetrics.Precision(task='binary', num_classes=num_classes)
+        self.train_f1score = torchmetrics.F1Score(task='binary', num_classes=num_classes)
+        self.val_f1score = torchmetrics.F1Score(task='binary', num_classes=num_classes)
 
 
     def forward(self, x):  # Forward function computes output Tensors from input Tensors.
