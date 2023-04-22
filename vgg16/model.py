@@ -19,14 +19,14 @@ class NN(pl.LightningModule):
         # Metrics
         #self.loss_fn = nn.CrossEntropyLoss()
         self.loss_fn = nn.BCELoss()
-        self.train_acc = torchmetrics.Accuracy(task='binary', num_classes=num_classes)
-        self.val_acc = torchmetrics.Accuracy(task='binary', num_classes=num_classes)
-        self.train_recall = torchmetrics.Recall(task='binary', num_classes=num_classes)
-        self.val_recall = torchmetrics.Recall(task='binary', num_classes=num_classes)
-        self.train_precision = torchmetrics.Precision(task='binary', num_classes=num_classes)
-        self.val_precision = torchmetrics.Precision(task='binary', num_classes=num_classes)
-        self.train_f1score = torchmetrics.F1Score(task='binary', num_classes=num_classes)
-        self.val_f1score = torchmetrics.F1Score(task='binary', num_classes=num_classes)
+        self.train_acc = torchmetrics.Accuracy(task='binary')
+        self.val_acc = torchmetrics.Accuracy(task='binary')
+        self.train_recall = torchmetrics.Recall(task='binary')
+        self.val_recall = torchmetrics.Recall(task='binary')
+        self.train_precision = torchmetrics.Precision(task='binary')
+        self.val_precision = torchmetrics.Precision(task='binary')
+        self.train_f1score = torchmetrics.F1Score(task='binary')
+        self.val_f1score = torchmetrics.F1Score(task='binary')
 
 
     def forward(self, x):  # Forward function computes output Tensors from input Tensors.
@@ -35,8 +35,13 @@ class NN(pl.LightningModule):
     def _common_step(self, batch, batch_idx):
         x, y = batch
         scores = self(x)
-        loss = self.loss_fn(scores, y)
+        scores = scores.float()
+        y = y.float()
+        loss = self.loss_fn(scores.view(-1), y.view(-1))
         preds = torch.argmax(scores, dim=1)
+        preds = preds.float()
+        print('PREDICTIONS: ', preds)
+        print('GROUND TRUTH: ', y)
 
         return loss, y, preds
     
