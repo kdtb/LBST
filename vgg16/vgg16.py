@@ -129,7 +129,7 @@ class PyTorchVGG16(nn.Module):
             nn.Linear(4096, 4096),
             nn.ReLU(True),
             nn.Dropout(p=0.5),
-            nn.Linear(4096, num_classes), #BCELoss = 1
+            nn.Linear(4096, num_classes), # num_classes = 1
             nn.Sigmoid() # BCELoss
         )
              
