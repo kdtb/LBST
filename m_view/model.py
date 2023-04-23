@@ -30,11 +30,11 @@ class NN(pl.LightningModule):
         
         # Metrics
         self.loss_fn = nn.CrossEntropyLoss()
-        self.train_acc = torchmetrics.Accuracy(task="multiclass", num_classes=num_classes)
-        self.val_acc = torchmetrics.Accuracy(task="multiclass", num_classes=num_classes)
-        self.train_recall = torchmetrics.Recall(task="multiclass", num_classes=num_classes)
-        self.train_precision = torchmetrics.Precision(task="multiclass", num_classes=num_classes)
-        self.train_f1score = torchmetrics.F1Score(task="multiclass", num_classes=num_classes)
+        self.train_acc = torchmetrics.Accuracy(task='binary')
+        self.val_acc = torchmetrics.Accuracy(task='binary')
+        self.train_recall = torchmetrics.Recall(task='binary')
+        self.train_precision = torchmetrics.Precision(task='binary')
+        self.train_f1score = torchmetrics.F1Score(task='binary')
 
     
     def forward(self, x):
@@ -50,6 +50,7 @@ class NN(pl.LightningModule):
         scores = self(x)
         loss = self.loss_fn(scores, y)
         preds = torch.argmax(scores, dim=1)
+        print('PRINT PREDS', preds)
 
         return loss, y, preds
     
@@ -65,10 +66,10 @@ class NN(pl.LightningModule):
         self.log_dict(
             {
                 "train_loss": loss,
-                "train_accuracy": self.train_acc,
-                "train_recall": self.train_recall,
-                "train_precision": self.train_precision,
-                "train_f1score": self.train_f1score
+                "train_accuracy": train_acc,
+                "train_recall": train_recall,
+                "train_precision": train_precision,
+                "train_f1score": train_f1score
             },
             on_step=False,
             on_epoch=True,
