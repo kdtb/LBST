@@ -38,7 +38,7 @@ class NN(pl.LightningModule):
         scores = scores.float()
         y = y.float()
         loss = self.loss_fn(scores.view(-1), y.view(-1))
-        preds = torch.argmax(scores, dim=1)
+        preds = scores.view(-1)
         preds = preds.float()
         print('PREDICTIONS: ', preds)
         print('GROUND TRUTH: ', y)
