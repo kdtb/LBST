@@ -21,9 +21,9 @@ class LBSTDataset(Dataset):
         
         image = Image.open(img_path)
         
-        y_label = torch.tensor(
-            self.annotations.iloc[index, 1], dtype = float
-        )  # y_label is placed in the second column of the csv file
+        y_label = self.annotations.iloc[index, 1]#torch.tensor(
+            #self.annotations.iloc[index, 1], dtype = float
+        #)  # y_label is placed in the second column of the csv file
 
 
         if self.transform:

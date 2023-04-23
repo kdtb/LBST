@@ -32,22 +32,29 @@ class NN(pl.LightningModule):
     def forward(self, x):  # Forward function computes output Tensors from input Tensors.
         return self.model(x)
     
-    def _common_step(self, batch, batch_idx):
+    def _common_step(self, batch, batch_idx):        
         x, y = batch
-        scores = self(x)
-        scores = scores.float()
+        x = x.float()
         y = y.float()
-        loss = self.loss_fn(scores.view(-1), y.view(-1))
-        preds = scores.view(-1)
-        preds = preds.float()
-        print('PREDICTIONS: ', preds)
-        print('GROUND TRUTH: ', y)
-
+        logits = self(x)
+        print('logits', logits)
+        
+        loss = self.loss_fn(logits.view(-1), y.view(-1))
+        preds = logits.view(-1)
         return loss, y, preds
+        
+        #scores = self(x)
+        #scores = scores.float()
+        #y = y.float()
+        #loss = self.loss_fn(scores.view(-1), y.view(-1))
+        #preds = scores.view(-1)
+        #print('PREDICTIONS: ', preds)
+        #print('GROUND TRUTH: ', y)
+
     
 
     def training_step(self, batch, batch_idx):
-        x, y = batch
+        #x, y = batch
         loss, y, preds = self._common_step(batch, batch_idx)
         
         train_acc = self.train_acc(preds, y)
@@ -72,7 +79,7 @@ class NN(pl.LightningModule):
 
 
     def validation_step(self, batch, batch_idx):
-        x, y = batch
+        #x, y = batch
         loss, y, preds = self._common_step(batch, batch_idx)
         
         val_acc = self.val_acc(preds, y)
