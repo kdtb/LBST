@@ -124,10 +124,10 @@ class PyTorchVGG16(nn.Module):
             
         self.classifier = nn.Sequential(
             nn.Linear(25088, 4096),
-            nn.ReLU(True),
+            nn.ReLU(),
             nn.Dropout(p=0.5),
             nn.Linear(4096, 4096),
-            nn.ReLU(True),
+            nn.ReLU(),
             nn.Dropout(p=0.5),
             nn.Linear(4096, num_classes), # num_classes = 1
             nn.Sigmoid() # BCELoss
