@@ -41,8 +41,6 @@ class NN(pl.LightningModule):
         self.val_precision = torchmetrics.Precision(task='binary')
         self.train_f1score = torchmetrics.F1Score(task='binary')
         self.val_f1score = torchmetrics.F1Score(task='binary')
-        #self.train_confmat = torchmetrics.ConfusionMatrix(task='binary')
-        #self.val_confmat = torchmetrics.ConfusionMatrix(task='binary')
 
     
     def forward(self, x):
@@ -71,7 +69,6 @@ class NN(pl.LightningModule):
         train_recall = self.train_recall(preds, y)
         train_precision = self.train_precision(preds, y)
         train_f1score = self.train_f1score(preds, y)
-        #train_confmat = self.train_confmat(preds.int(), y.int())
         
         self.log_dict(
             {
@@ -79,8 +76,7 @@ class NN(pl.LightningModule):
                 "train_accuracy": train_acc,
                 "train_recall": train_recall,
                 "train_precision": train_precision,
-                "train_f1score": train_f1score,
-                #"train_confmat": train_confmat
+                "train_f1score": train_f1score
             },
             on_step=False,
             on_epoch=True,
@@ -99,7 +95,6 @@ class NN(pl.LightningModule):
         val_recall = self.val_recall(preds, y)
         val_precision = self.val_precision(preds, y)
         val_f1score = self.val_f1score(preds, y)
-        #val_confmat = self.val_confmat(preds, y)
         
         self.log_dict(
             {
@@ -107,8 +102,7 @@ class NN(pl.LightningModule):
                 "val_accuracy": val_acc,
                 "val_recall": val_recall,
                 "val_precision": val_precision,
-                "val_f1score": val_f1score,
-                #"val_confmat": val_confmat
+                "val_f1score": val_f1score
             },
             on_step=False,
             on_epoch=True,
