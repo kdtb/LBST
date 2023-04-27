@@ -37,10 +37,13 @@ class NN(pl.LightningModule):
         self.test_acc = torchmetrics.Accuracy(task='binary')
         self.train_recall = torchmetrics.Recall(task='binary')
         self.val_recall = torchmetrics.Recall(task='binary')
+        self.test_recall = torchmetrics.Recall(task='binary')
         self.train_precision = torchmetrics.Precision(task='binary')
         self.val_precision = torchmetrics.Precision(task='binary')
+        self.test_precision = torchmetrics.Precision(task='binary')
         self.train_f1score = torchmetrics.F1Score(task='binary')
         self.val_f1score = torchmetrics.F1Score(task='binary')
+        self.test_f1score = torchmetrics.F1Score(task='binary')
 
     
     def forward(self, x):
@@ -116,10 +119,17 @@ class NN(pl.LightningModule):
         loss, y, preds = self._common_step(batch, batch_idx)
         
         test_acc = self.test_acc(preds, y)
+        test_recall = self.test_recall(preds, y)
+        test_precision = self.test_precision(preds, y)
+        test_f1score = self.test_f1score(preds, y)
         
         self.log_dict(
-            {"test_loss": loss,
-             "test_acc": test_acc
+            {
+                "test_loss": loss,
+                "test_acc": test_acc,
+                "test_recall": test_recall,
+                "test_precision": test_precision,
+                "test_f1score": test_f1score
             },
             on_step=False,
             on_epoch=True

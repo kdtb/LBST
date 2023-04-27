@@ -6,7 +6,7 @@ from customDataset import LBSTDataset
 
 
 class CustomDataModule(pl.LightningDataModule):
-    def __init__(self, data_dir, train_csv, val_csv, test_csv, batch_size, num_workers):
+    def __init__(self, data_dir, train_csv, val_csv, test_csv, batch_size, num_workers, mean, std):
         super().__init__()
         self.data_dir = data_dir
         self.train_csv = train_csv
@@ -14,6 +14,9 @@ class CustomDataModule(pl.LightningDataModule):
         self.test_csv = test_csv
         self.batch_size = batch_size
         self.num_workers = num_workers
+        self.mean = mean
+        self.std = std
+        
 
     def setup(self, stage):
         # multiple gpu
@@ -26,7 +29,7 @@ class CustomDataModule(pl.LightningDataModule):
                     #transforms.AutoAugment(),
                     #transforms.AugMix(),
                     transforms.ToTensor(),
-                    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+                    transforms.Normalize(mean=self.mean, std=self.std) # (mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
                 ]
             ),
         )
@@ -37,7 +40,7 @@ class CustomDataModule(pl.LightningDataModule):
                 [
                     transforms.Resize((224, 224)),
                     transforms.ToTensor(),
-                    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+                    transforms.Normalize(mean=self.mean, std=self.std)
                 ]
             ),
         )
@@ -48,7 +51,7 @@ class CustomDataModule(pl.LightningDataModule):
                 [
                     transforms.Resize((224, 224)),
                     transforms.ToTensor(),
-                    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+                    transforms.Normalize(mean=self.mean, std=self.std)
                 ]
             ),
         )

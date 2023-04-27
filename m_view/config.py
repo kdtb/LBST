@@ -13,7 +13,6 @@ OUT_CHANNELS = 64
 
 
 # Training hyperparameters
-INPUT_SIZE = 3 * 224 * 224
 INPUT_SHAPE = 3 * 224 * 224
 NUM_CLASSES = 2
 LEARNING_RATE = 0.001  # (=1e-3)
