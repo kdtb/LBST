@@ -159,3 +159,63 @@ class TrainVal:
             encoding="utf-8",
             index=False,
         )
+        
+class TrainValMini:
+    def __init__(self, train_csv_1, train_csv_2, val_csv_2, label_column, val_size, seed):
+        super().__init__()
+        self.train_csv_1 = train_csv_1
+        self.train_csv_2 = train_csv_2
+        self.val_csv_2 = val_csv_2
+        self.label_column = label_column
+        self.val_size = val_size
+        self.seed = seed
+    
+    # Set seed function    
+    def set_all_seeds(self):
+        os.environ["PL_GLOBAL_SEED"] = str(self.seed)
+        random.seed(self.seed)
+        np.random.seed(self.seed)
+        torch.manual_seed(self.seed)
+        torch.cuda.manual_seed_all(self.seed)
+
+    # Split function    
+    def df(self):
+        
+        TrainValMini.set_all_seeds(self)
+        train_set = pd.read_csv(
+            self.train_csv_1,
+            sep=",",
+            encoding="utf-8"
+        )
+        print("Original train set length:", len(train_set), sep="\n")
+        
+        train_set = train_set.sample(frac = 0.5)
+        
+        ## Split into train and test while taking care of parcel_ID
+        
+        
+        train_set2 = train_set
+        splitter2 = GroupShuffleSplit(test_size=self.val_size, n_splits=1, random_state=self.seed)
+        split2 = splitter2.split(train_set2, groups=train_set2.parcel_id)
+        train_inds2, val_inds = next(split2)
+
+        train_set2 = train_set.iloc[train_inds2]
+        val_set = train_set.iloc[val_inds]
+
+        print("New train set length and first n rows:", len(train_set2), train_set2.head(), "Val set length and first n rows:", len(val_set), val_set.head(), "Train set label distribution:", train_set2['label'].value_counts(), "Val set label distribution:", val_set['label'].value_counts(), sep="\n")
+
+        ## Save to csv
+
+        train_set2.to_csv(
+            self.train_csv_2,
+            sep=",",
+            encoding="utf-8",
+            index=False,
+            mode='w' # overwrite
+        )
+        val_set.to_csv(
+            self.val_csv_2,
+            sep=",",
+            encoding="utf-8",
+            index=False,
+        )
