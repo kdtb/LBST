@@ -4,7 +4,7 @@ import torch
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Extra
-SEED = 1
+SEED = 56
 SEED_2 = 2
 
 # Model

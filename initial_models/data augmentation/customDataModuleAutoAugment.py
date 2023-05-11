@@ -38,7 +38,6 @@ class CustomDataModule(pl.LightningDataModule):
             transform=transforms.Compose(
                 [
                     transforms.Resize((224, 224)),
-                    transforms.AutoAugment(),
                     transforms.ToTensor(),
                     transforms.Normalize(mean=self.mean, std=self.std)
                 ]
