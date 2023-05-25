@@ -4,11 +4,11 @@
 
 The README file serves as a valuable resource that provides detailed information about each script included in the repository. All code in this project is written in Python.
 
-## Data Preparation
+## Data Preparation (data_prep)
 
 - **data_prep.ipynb**: The main script in this folder is responsible for dataset splitting into 80/20% train/test sets. It also organizes the data into appropriate folders on your local computer. Additionally, it verifies the reliability of the holdout validation protocol.
 
-## Model Building
+## Model Building (experimental_models & initial_models)
 
 All the model building components are stored in the following folders:
 
