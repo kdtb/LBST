@@ -1,5 +1,9 @@
 # Pioneering Automation in Agricultural Subsidy Processing through Deep Learning for Computer Vision
 
+## Connect with Me
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?logo=linkedin&style=for-the-badge)](https://www.linkedin.com/in/kasper-toft-braun/)
+
 ## Description
 
 The README file serves as a valuable resource that provides detailed information about each script included in the repository. All code in this project is written in Python.
