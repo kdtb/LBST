@@ -6,7 +6,7 @@ The README file serves as a valuable resource that provides detailed information
 
 ## Data Preparation (data_prep)
 
-- **data_prep.ipynb**: The main script in this folder is responsible for dataset splitting into 80/20% train/test sets. It also organizes the data into appropriate folders on your local computer. Additionally, it verifies the reliability of the holdout validation protocol.
+- **data_prep.ipynb**: The main script in this folder is responsible for dataset splitting into 80/20% train/test sets. It also organizes the data into appropriate folders on my local computer. Additionally, it verifies the reliability of the holdout validation protocol.
 
 ## Model Building (experimental_models & initial_models)
 
@@ -18,7 +18,7 @@ All the model building components are stored in the following folders:
 
 ### Configurations
 
-- **config.py**: A script containing all the configurations for your project, such as the number of epochs, optimizer settings, root paths, etc.
+- **config.py**: A script containing all the configurations for the project, such as the number of epochs, optimizer settings, root paths, etc.
 
 ### Creating .csv files
 
@@ -42,7 +42,7 @@ All the model building components are stored in the following folders:
 
 ### Training
 
-- **train.ipynb**: A JupyterLab notebook where you can train your model. This script loads all the above scripts and performs the model training.
+- **train.ipynb**: A JupyterLab notebook where I train the models. This script loads all the above scripts and performs the model training.
 
 ## Requirements
 
