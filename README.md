@@ -1,194 +1,65 @@
-<!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
-<a name="readme-top"></a>
-<!--
-*** Thanks for checking out the Best-README-Template. If you have a suggestion
-*** that would make this better, please fork the repo and create a pull request
-*** or simply open an issue with the tag "enhancement".
-*** Don't forget to give the project a star!
-*** Thanks again! Now go create something AMAZING! :D
--->
+# Project Name
 
+## Description
 
+Provide a brief description of your project.
 
-<!-- PROJECT SHIELDS -->
-<!--
-*** I'm using markdown "reference style" links for readability.
-*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
-*** See the bottom of this document for the declaration of the reference variables
-*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
-*** https://www.markdownguide.org/basic-syntax/#reference-style-links
--->
-[![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
-[![LinkedIn][linkedin-shield]][linkedin-url]
+## Data Preparation
 
+- **data_prep.ipynb**: The main script in this folder is responsible for dataset splitting into 80/20% train/test sets. It also organizes the data into appropriate folders on your local computer. Additionally, it verifies the reliability of the holdout validation protocol.
 
+## Model Building
 
-<!-- PROJECT LOGO -->
-<br />
-<div align="center">
-  <a href="https://github.com/github_username/repo_name">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
-  </a>
+All the model building components are stored in the following folders:
 
-<h3 align="center">project_title</h3>
+### Standardization
 
-  <p align="center">
-    project_description
-    <br />
-    <a href="https://github.com/github_username/repo_name"><strong>Explore the docs »</strong></a>
-    <br />
-    <br />
-    <a href="https://github.com/github_username/repo_name">View Demo</a>
-    ·
-    <a href="https://github.com/github_username/repo_name/issues">Report Bug</a>
-    ·
-    <a href="https://github.com/github_username/repo_name/issues">Request Feature</a>
-  </p>
-</div>
+- **calculateMeanStd.py**: This script calculates the mean and standard deviation of the dataset. These values are used for dataset standardization before model building.
 
+### Configurations
 
+- **config.py**: A script containing all the configurations for your project, such as the number of epochs, optimizer settings, root paths, etc.
 
-<!-- TABLE OF CONTENTS -->
-<details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
-    </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
-  </ol>
-</details>
+### Creating .csv files
 
+- **createCSV.py**: This script creates the necessary .csv files that contain information on image file names and target labels required for training the model.
 
+### Loading photographs
 
-<!-- ABOUT THE PROJECT -->
-## About The Project
+- **customDataset.py**: A script responsible for reading and loading photograph files from the .csv files.
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+### Dataloaders
 
-Here's a blank template to get started: To avoid retyping too much info. Do a search and replace with your text editor for the following: `github_username`, `repo_name`, `twitter_handle`, `linkedin_username`, `email_client`, `email`, `project_title`, `project_description`
+- **customDataModule.py**: This script creates the train/val/test dataloaders used in model training. It also handles dataset shuffling, data augmentation, and other related tasks.
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+### Model architecture
 
+- **model.py**: A script that defines the architecture of the model.
 
+### Plotting
 
-### Built With
+- **plot_loss_and_acc.py**: This script provides visualization of the model's performance through learning curves and confusion matrices.
 
-* [![Next][Next.js]][Next-url]
-* [![React][React.js]][React-url]
-* [![Vue][Vue.js]][Vue-url]
-* [![Angular][Angular.io]][Angular-url]
-* [![Svelte][Svelte.dev]][Svelte-url]
-* [![Laravel][Laravel.com]][Laravel-url]
-* [![Bootstrap][Bootstrap.com]][Bootstrap-url]
-* [![JQuery][JQuery.com]][JQuery-url]
+### Training
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+- **train.ipynb**: A JupyterLab notebook where you can train your model. This script loads all the above scripts and performs the model training.
 
-
-
-<!-- GETTING STARTED -->
-## Getting Started
-
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
-
-### Prerequisites
-
-This is an example of how to list things you need to use the software and how to install them.
-* npm
-  ```sh
-  npm install npm@latest -g
-  ```
-
-### Installation
-
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
-   ```sh
-   git clone https://github.com/github_username/repo_name.git
-   ```
-3. Install NPM packages
-   ```sh
-   npm install
-   ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = 'ENTER YOUR API';
-   ```
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
-<!-- USAGE EXAMPLES -->
 ## Usage
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
+Explain how to use your project and provide any necessary instructions.
 
-_For more examples, please refer to the [Documentation](https://example.com)_
+## Credits
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+Mention any credits or acknowledgments you would like to give.
 
+## License
 
+Specify the license under which your project is released.
 
-<!-- ROADMAP -->
-## Roadmap
+All code in this project is written in Python.
 
-- [ ] Feature 1
-- [ ] Feature 2
-- [ ] Feature 3
-    - [ ] Nested Feature
+Feel free to customize this template according to your requirements.
 
-See the [open issues](https://github.com/github_username/repo_name/issues) for a full list of proposed features (and known issues).
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
-<!-- CONTRIBUTING -->
-## Contributing
-
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-
-If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
-Don't forget to give the project a star! Thanks again!
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
-
-
-
-
-
-A brief summary:
 
 	- data_prep folder : the main script in this folder is data_prep.ipynb. I split my dataset into 80/20% train/test, i place my data into proper folders on my local computer, i verify the reliability of the holdout validation protocol.
 	- All other folders : all my model building consists of the following scripts:
