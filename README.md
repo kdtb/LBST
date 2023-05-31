@@ -1,7 +1,5 @@
 # Pioneering Automation in Agricultural Subsidy Processing through Deep Learning for Computer Vision
 
-![alt text](https://imgur.com/a/ixBd6TI)
-
 ## Description
 
 The README file serves as a valuable resource that provides detailed information about each script included in the repository. All code in this project is written in Python.
