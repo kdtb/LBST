@@ -1,6 +1,6 @@
 # Pioneering Automation in Agricultural Subsidy Processing through Deep Learning for Computer Vision
 
-![alt text]([http://url/to/img.png](https://drive.google.com/file/d/1Jowf0cypQVHYj1mx8rcf8zolyiwsKgff/view?usp=sharing))
+![alt text](https://drive.google.com/file/d/1Jowf0cypQVHYj1mx8rcf8zolyiwsKgff/view?usp=sharing)
 
 ## Description
 
