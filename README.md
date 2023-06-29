@@ -4,7 +4,7 @@
   src="/CAP.jpg"
   alt="CAP Control Process"
   title="CAP Control Process"
-  style="display: inline-block; margin: 0 auto; max-width: 300px">
+  style="display: inline-block; margin: 0 auto; max-width: 200px">
 
 ## Description
 
