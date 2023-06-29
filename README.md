@@ -56,6 +56,6 @@ All the model building components are stored in the following folders:
 
 ## License
 
-Copyright © Kasper Dupont Toft Braun (kasperdtb@gmail.com), June
+Copyright © , June
 2023. This work is licensed under the Creative Commons attribution Non
 Commercial No Derivations license (CC BY-NC-ND 2.0).
